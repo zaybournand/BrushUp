@@ -1,0 +1,177 @@
+.home-container {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom, #fdfcfb, #e2d1c3);
+  background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+  background-size: cover;
+  background-repeat: repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+
+.home-title {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-family: 'Brush Script MT', cursive;
+  color: #1e1e1e;
+}
+
+.instruction-text {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Top Navigation Bar */
+.top-buttons {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-left-buttons,
+.top-right-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Shared button styles */
+.top-left-buttons button,
+.top-right-buttons button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+}
+.top-left-buttons{
+  padding-left: 35px;
+}
+.top-right-buttons{
+  padding-right: 70px;
+}
+
+.top-left-buttons button:hover,
+.top-right-buttons button:hover {
+  background-color: #f1f1f1;
+}
+
+.skill-selector {
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-family: 'Brush Script MT', cursive;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.skill-selector select {
+  padding: 10px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #999;
+  font-family: Arial, sans-serif;
+}
+
+.art-image-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+  max-width: 90%;
+}
+
+.art-image-row img {
+  width: 250px;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.art-image-row img:hover {
+  transform: scale(1.05);
+}
+
+.reference-image {
+  max-height: 250px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+}
+
+.start-button {
+  background-color: #10b981;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.start-button:hover {
+  background-color: #059669;
+  transform: scale(1.03);
+}
+
+.start-button:disabled {
+  background-color: #a7f3d0;
+  cursor: not-allowed;
+}
+
+.reference-footer {
+  font-size: 1.1rem;
+  color: #555;
+  margin-top: auto;
+  margin-bottom: 10px;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+}
+
+.top-right-buttons button,
+.top-left-buttons button {
+  background-color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  margin-left: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+
+.logout-btn {
+  color: #ef4444;
+}
+
+.logout-btn:hover {
+  background-color: #fef2f2;
+}
+
+.login-btn:hover,
+.signup-btn:hover {
+  background-color: #f1f1f1;
+}
