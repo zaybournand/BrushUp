@@ -5,30 +5,41 @@ import { useNavigate } from "react-router-dom";
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState(''); // New state for username
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const registerUser = () => {
-        if (!email || !password) {
-            setError("Email and password are required.");
+        if (!email || !password || !username) { // Added username to validation
+            setError("Email, password, and username are required.");
             return;
         }
 
-        axios.post('https://localhost:5000/signup', {
+        axios.post('https://localhost:5001/signup', {
             email: email,
-            password: password
+            password: password,
+            username: username // Send username to the backend
         })
         .then(response => {
             console.log(response);
-            localStorage.setItem('userEmail', email);
-            navigate("/");
+            // Removed redundant localStorage.setItem calls
+            // After successful registration, navigate to login page
+            navigate("/login"); // Changed from "/" to "/login"
         })
         .catch(error => {
             console.error(error);
             if (error.response && error.response.status === 409) {
-                setError("Email already exists. Please use a different email.");
+                // Check if the 409 error is specifically for email or username
+                const errorMessage = error.response.data.error;
+                if (errorMessage.includes("Email already exists")) {
+                    setError("Email already exists. Please use a different email.");
+                } else if (errorMessage.includes("Username already exists")) {
+                    setError("Username already exists. Please choose a different username.");
+                } else {
+                    setError("An account with this information already exists. Please try again.");
+                }
             } else {
-                setError("An error occurred. Please try again.");
+                setError("An error occurred during registration. Please try again.");
             }
         });
     };
@@ -47,6 +58,17 @@ export default function RegisterPage() {
                             onChange={(e) => setEmail(e.target.value)}
                             style={{ width: "100%", padding: "0.75rem", borderRadius: "4px", border: "1px solid #ccc" }}
                             placeholder="Enter your email"
+                        />
+                    </div>
+                    <div style={{ marginBottom: "1rem" }}>
+                        <label htmlFor="username" style={{ display: "block", marginBottom: "0.5rem" }}>Username</label>
+                        <input
+                            type="text"
+                            id="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            style={{ width: "100%", padding: "0.75rem", borderRadius: "4px", border: "1px solid #ccc" }}
+                            placeholder="Choose a username"
                         />
                     </div>
                     <div style={{ marginBottom: "1.5rem" }}>

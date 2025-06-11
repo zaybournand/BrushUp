@@ -1,10 +1,9 @@
-// src/index.js (or src/main.jsx)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
 import './index.css';
-import reportWebVitals from './reportWebVitals'; // <--- ADD THIS LINE
+import reportWebVitals from './reportWebVitals'; 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,4 +14,4 @@ root.render(
   </React.StrictMode>
 );
 
-reportWebVitals(); // Keep this line now that it's imported
+reportWebVitals(); 

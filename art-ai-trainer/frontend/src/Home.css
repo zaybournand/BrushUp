@@ -23,12 +23,7 @@
   color: #1e1e1e;
 }
 
-.instruction-text {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 20px;
-  font-family: 'Segoe UI', sans-serif;
-}
+
 
 /* Top Navigation Bar */
 .top-buttons {
@@ -47,20 +42,22 @@
   gap: 10px;
 }
 
-/* Shared button styles */
-.top-left-buttons button,
-.top-right-buttons button {
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 4px;
+.top-right-buttons button,
+.top-left-buttons button {
   background-color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
   color: #333;
+  margin-left: 10px;
+  font-size: 1rem;
   cursor: pointer;
-  font-family: Arial, sans-serif;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s;
 }
+
+
+
 .top-left-buttons{
   padding-left: 35px;
 }
@@ -89,7 +86,15 @@
   border: 1px solid #999;
   font-family: Arial, sans-serif;
 }
-
+.skill-content-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the text content */
+  flex-grow: 1; /* This makes the text content grow and absorb extra space */
+  justify-content: flex-start; /* Aligns content to the top within its growing space */
+  width: 100%; /* Ensure it takes full width within its parent */
+  margin-bottom: 20px; /* Space between text content and the button below */
+}
 .art-image-row {
   display: flex;
   justify-content: center;
@@ -125,7 +130,7 @@
   padding: 12px 24px;
   font-size: 1.1rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.2s, transform 0.2s;
@@ -141,28 +146,6 @@
   cursor: not-allowed;
 }
 
-.reference-footer {
-  font-size: 1.1rem;
-  color: #555;
-  margin-top: auto;
-  margin-bottom: 10px;
-  font-family: 'Segoe UI', sans-serif;
-  text-align: center;
-}
-
-.top-right-buttons button,
-.top-left-buttons button {
-  background-color: white;
-  padding: 8px 16px;
-  border-radius: 6px;
-  border: none;
-  margin-left: 10px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.2s;
-}
-
 .logout-btn {
   color: #ef4444;
 }
@@ -174,4 +157,352 @@
 .login-btn:hover,
 .signup-btn:hover {
   background-color: #f1f1f1;
+}
+
+.footer-paths {
+  margin-top: 40px;
+  font-size: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  line-height: 1.8;
+  color: #333;
+}
+
+.footer-paths span {
+  color: #10b981;
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.footer-paths span:hover {
+  color: #059669;
+  text-decoration: underline;
+}
+
+.footer-paths strong {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+
+/* Home.css additions */
+
+.ai-create-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.1rem;          /* Match start-button unit */
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;           /* Optional if needed */
+  transition: background-color 0.2s, transform 0.2s; /* Match start-button */
+}
+
+.ai-text-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.ai-create-button:hover:not(:disabled) {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.ai-create-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.ai-login-message {
+  text-align: center;
+  margin-top: 10px;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.start-button,
+.ai-create-button {
+  min-width: 180px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 550px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-content h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+.modal-description {
+  text-align: center;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* Generator Inputs (reused from Reference.css - ensure these are here or linked) */
+.generator-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.prompt-textarea,
+.negative-prompt-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+}
+
+.prompt-textarea:disabled,
+.negative-prompt-input:disabled {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.modal-actions .generate-btn,
+.modal-actions .cancel-btn {
+  padding: 10px 20px;
+  top:40px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.modal-actions .generate-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.modal-actions .generate-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.modal-actions .cancel-btn {
+  background-color: #e0e0e0;
+  color: #555;
+  border: 1px solid #ccc;
+}
+
+.modal-actions .cancel-btn:hover {
+  background-color: #d0d0d0;
+}
+
+/* Messages (reused from Reference.css) */
+.generator-message {
+  padding: 10px 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 0.95em;
+}
+
+.generator-message.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef5350;
+}
+
+/* Loading spinner (reused from Reference.css) */
+.loading-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+/* Home.css additions */
+
+/* AI Image Preview Modal specific styles */
+.preview-modal-content {
+  max-width: 650px; /* Make preview modal a bit wider */
+  padding: 25px;
+}
+
+.preview-image-container {
+  text-align: center;
+  margin-bottom: 25px;
+  background-color: #f0f0f0; /* Light background for image */
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+.preview-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  display: block; /* Remove extra space below image */
+  margin: 0 auto; /* Center the image */
+}
+
+.section-heading {
+  font-size: 1.5em; /* Adjust size as needed */
+  color: #333;
+  margin-bottom: 20px; /* Space below the heading */
+  font-weight: bold;
+}
+
+/* Ensure the layout styles from the previous step are also present */
+.practice-options-row {
+  display: flex;
+  justify-content: center;
+  align-items: stretch; /* Columns stretch to match height */
+  gap: 40px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.skill-practice-section,
+.ai-creation-section {
+  flex: 1;
+  min-width: 300px;
+  max-width: 45%;
+  border-radius: 12px;
+  padding: 25px;
+
+  flex-direction: column;
+  align-items: center; /* Centers content horizontally within the column */
+  text-align: center;
+  /* Keep justify-content: space-between here to push the button to the bottom */
+  justify-content: space-between;
+}
+
+/* New container for the arrow buttons */
+.image-navigation-buttons {
+  display: flex;
+  justify-content: center;
+  /* Adjust gap between the two buttons */
+  gap: 10px; /* Reduced from 20px to 10px */
+  width: 100%;
+  /* Add margin-bottom to push the 'Start Drawing' button down */
+  margin-bottom: 15px; /* Adds space between arrows and "Start Drawing" */
+}
+
+/* Styles for the arrow buttons themselves */
+.arrow-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  /* Make padding slightly smaller */
+  padding: 6px 12px; /* Adjusted padding */
+  /* Make font slightly smaller */
+  font-size: 0.8em; /* Adjusted font size */
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  /* Make width slightly smaller */
+  min-width: 80px; /* Adjusted minimum width */
+  text-align: center;
+  /* REMOVE THIS LINE IF IT WAS THERE - it's redundant/unusual padding */
+  /* padding-bottom: 10px; */
+}
+
+.arrow-button:hover:not(:disabled) {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.arrow-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+
+.start-blank-button {
+  background-color: #15caa9;
+  color: white;
+  padding: 12px 24px;
+  font-size: 1.1rem;          /* Match start-button unit */
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;           /* Optional if needed */
+  transition: background-color 0.2s, transform 0.2s; /* Match start-button */
+}
+.blank-canvas-title {
+  font-size: 1.5em;
+  color: #333;
+  margin-top: 60px; /* Space above this new section's title */
+  margin-bottom: 15px;
+}
+
+.blank-canvas-description {
+  color: #000000;
+  margin-bottom: 20px;
+  margin-top: 30px;
+  line-height: 1.5;
+  font-size: 0.95em;
+}
+
+.blank-canvas-login-message {
+  text-align: center;
+  margin-top: 10px;
+  color: #666;
+  font-size: 0.9em;
 }

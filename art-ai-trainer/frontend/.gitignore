@@ -14,6 +14,10 @@ dist/
 .env.test.local
 .env.production.local
 
+
+
+art-ai-trainer/backend/*.prem
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

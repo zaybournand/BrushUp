@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useUser } from './UserContext'; // Adjust path as needed
+import { useUser } from './UserContext'; 
 
 const PrivateRoute = ({ children }) => {
     const { currentUser, loadingUser } = useUser();
@@ -11,11 +11,11 @@ const PrivateRoute = ({ children }) => {
     }
 
     if (!currentUser) {
-        // If not logged in, redirect to the login page
+        
         return <Navigate to="/login" replace />;
     }
 
-    // If logged in, render the child components (the protected route)
+   
     return children;
 };
 

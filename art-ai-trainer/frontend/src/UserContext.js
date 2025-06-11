@@ -1,44 +1,54 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
-// Create a Context
+
 const UserContext = createContext(null);
 
-// Create a Provider component
+
 export const UserProvider = ({ children }) => {
-    const [currentUser, setCurrentUser] = useState(null); // Stores user_id or null
-    const [loadingUser, setLoadingUser] = useState(true); // Tracks if user status is being checked
+    const [currentUser, setCurrentUser] = useState(null); // This will now store the full user object: { id, email, username }
+    const [loadingUser, setLoadingUser] = useState(true);
 
     // Effect to check user status on app load
     useEffect(() => {
         const checkUser = async () => {
             try {
-                // Call your /whoami endpoint to check session status
-                const response = await axios.get('https://localhost:5000/whoami', { withCredentials: true });
+                // Call your whoami endpoint to check session status
+                const response = await axios.get('https://localhost:5001/whoami', { withCredentials: true });
                 if (response.data && response.data.user_id) {
-                    setCurrentUser(response.data.user_id);
+                    // Store the entire user data object from the backend response
+                    setCurrentUser({
+                        id: response.data.user_id,
+                        email: response.data.email || 'User', // Fallback for email if not provided
+                        username: response.data.username || 'Anonymous' // Fallback for username if not provided
+                    });
                 } else {
                     setCurrentUser(null);
                 }
             } catch (error) {
                 console.error("Failed to fetch user status:", error);
-                setCurrentUser(null); // Ensure user is null on any error
+                setCurrentUser(null);
             } finally {
-                setLoadingUser(false); // Finished checking user status
+                setLoadingUser(false);
             }
         };
         checkUser();
-    }, []); // Run only once on component mount
+    }, []); // Empty dependency array means this runs once on component mount
 
-    // Functions to update user state
-    const login = (userId) => setCurrentUser(userId);
+    // Function to update user state upon login
+    // It now expects the full user data object as an argument
+    const login = (userData) => {
+        setCurrentUser(userData);
+    };
+
+    // Function to handle logout
     const logout = async () => {
         try {
-            await axios.post('https://localhost:5000/logout', {}, { withCredentials: true });
-            setCurrentUser(null); // Clear user state on successful logout
+            await axios.post('https://localhost:5001/logout', {}, { withCredentials: true });
+            setCurrentUser(null); // Clear user data on logout
         } catch (error) {
             console.error("Logout failed:", error);
-            // Optionally, handle error or still clear user on client if server logout is not critical
+            // Optionally, set a message to the user here
         }
     };
 

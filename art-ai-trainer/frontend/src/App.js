@@ -1,71 +1,124 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios here
+import axios from 'axios';
 
-// Import your page components
 import Home from './Home';
 import Drawing from './Drawing';
 import MyDrawings from './myDrawings';
 import Reference from './Reference';
+import ArtPost from './artPost';
 import Login from './Log in';
 import RegisterPage from './Signup';
 
-// Import the new authentication components
-import { UserProvider } from './UserContext'; // Adjust path if needed
-import PrivateRoute from './PrivateRoute'; // Adjust path if needed
+import { UserProvider } from './UserContext';
+import PrivateRoute from './PrivateRoute';
 
-const API_BASE_URL = 'https://localhost:5000'; // Define your API base URL here
+const API_BASE_URL = 'https://localhost:5001';
 
 const App = () => {
   const [selectedSkill, setSelectedSkill] = useState('');
   const [selectedExistingDrawing, setSelectedExistingDrawing] = useState(null);
+  const [aiGeneratedImageUrl, setAiGeneratedImageUrl] = useState(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // NEW STATE: To indicate if the Drawing page should start with a blank canvas
+  const [shouldStartBlankCanvas, setShouldStartBlankCanvas] = useState(false); // Renamed for clarity
 
   const navigate = useNavigate();
 
-  const handleStartDrawing = (skill) => {
+  // MODIFIED: handleStartDrawing now ensures blank mode is off
+  const handleStartDrawing = (skill, imageIndex) => {
     setSelectedSkill(skill);
+    setSelectedImageIndex(imageIndex);
     setSelectedExistingDrawing(null);
+    setAiGeneratedImageUrl(null);
+    setShouldStartBlankCanvas(false); // Ensure blank mode is off
     navigate('/drawing');
   };
 
+  // MODIFIED: handleAICreateDrawing now ensures blank mode is off
+  const handleAICreateDrawing = (imageUrl) => {
+    setAiGeneratedImageUrl(imageUrl);
+    setSelectedSkill('');
+    setSelectedExistingDrawing(null);
+    setSelectedImageIndex(0);
+    setShouldStartBlankCanvas(false); // Ensure blank mode is off
+    navigate('/drawing');
+  };
+
+  // NEW HANDLER: To start a blank drawing session
+  const handleStartBlankDrawing = () => {
+    setShouldStartBlankCanvas(true); // Activate blank mode
+    setSelectedSkill(''); // Clear any skill
+    setSelectedExistingDrawing(null); // Clear any existing drawing
+    setAiGeneratedImageUrl(null); // Clear any AI image
+    setSelectedImageIndex(0); // Clear any image index
+    navigate('/drawing');
+  };
+
+  // MODIFIED: Reset states when navigating to other main pages
   const handleGoToMyDrawings = () => {
     setSelectedExistingDrawing(null);
+    setAiGeneratedImageUrl(null);
+    setSelectedSkill('');
+    setSelectedImageIndex(0);
+    setShouldStartBlankCanvas(false); // Ensure blank mode is off
     navigate('/mydrawings');
   };
 
+  // MODIFIED: Reset states when navigating to other main pages
   const handleGoToReference = () => {
     setSelectedExistingDrawing(null);
+    setAiGeneratedImageUrl(null);
+    setSelectedSkill('');
+    setSelectedImageIndex(0);
+    setShouldStartBlankCanvas(false); // Ensure blank mode is off
     navigate('/reference');
   };
 
+  // MODIFIED: Reset states when navigating to other main pages
+  const handleGoToArtPost = () => {
+    setSelectedExistingDrawing(null);
+    setAiGeneratedImageUrl(null);
+    setSelectedSkill('');
+    setSelectedImageIndex(0);
+    setShouldStartBlankCanvas(false); // Ensure blank mode is off
+    navigate('/artpost');
+  };
+
+  // MODIFIED: Reset states when selecting an existing drawing
   const handleSelectDrawingForPractice = (drawing) => {
     setSelectedExistingDrawing(drawing);
     setSelectedSkill('');
+    setAiGeneratedImageUrl(null);
+    setSelectedImageIndex(0);
+    setShouldStartBlankCanvas(false); // Ensure blank mode is off
     navigate('/drawing');
   };
 
-  // --- CRUCIAL CHANGE HERE: handleAddToMyDrawings ---
-  const handleAddToMyDrawings = async (drawingData) => { // Make it async and accept drawingData
+  const handleAddToMyDrawings = async (drawingData) => {
+    console.log("handleAddToMyDrawings called with data:", drawingData.name); // ADD THIS LINE
     try {
-      // Send the drawing data to your Flask backend's upload endpoint
-      const response = await axios.post(`${API_BASE_URL}/upload-drawing`, {
-        name: drawingData.name,
-        image_url: drawingData.image_url // Use image_url as expected by backend
-      }, {
-        withCredentials: true // Important for sending the session cookie
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/upload-drawing`,
+        {
+          name: drawingData.name,
+          image_url: drawingData.image_url,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       console.log('Drawing successfully added to backend:', response.data);
-      // After successful upload, navigate to MyDrawings to see the updated list
       navigate('/mydrawings');
     } catch (error) {
-      console.error('Failed to add drawing to MyDrawings:', error);
-      alert(`Failed to save drawing: ${error.message}. Please ensure you are logged in.`);
+      console.error('Failed to add drawing to MyDrawings:', error); // Keep this
+      alert(`Failed to save drawing: ${error.message}. Please ensure you are logged in.`); // Keep this
       if (error.response && error.response.status === 401) {
-        navigate('/login'); // Redirect to login if unauthorized
+        navigate('/login');
       }
     }
   };
-  // --- END CRUCIAL CHANGE ---
 
   return (
     <UserProvider>
@@ -75,21 +128,27 @@ const App = () => {
           element={
             <Home
               onStartDrawing={handleStartDrawing}
+              onAICreateDrawing={handleAICreateDrawing}
               onGoToMyDrawings={handleGoToMyDrawings}
               onGoToReference={handleGoToReference}
+              onGoToArtPost={handleGoToArtPost}
+              onStartBlankDrawing={handleStartBlankDrawing} // Passed new handler
             />
           }
         />
         <Route
-          path="/drawing"
-          element={
-            <Drawing
-              skill={selectedSkill}
-              selectedExistingDrawing={selectedExistingDrawing}
-              onBack={() => navigate('/')}
-              onAddToMyDrawings={handleAddToMyDrawings} // Pass the updated handler
-            />
-          }
+            path="/drawing"
+            element={
+              <Drawing
+                skill={selectedSkill}
+                initialImageIndex={selectedImageIndex}
+                selectedExistingDrawing={selectedExistingDrawing}
+                aiGeneratedImageURL={aiGeneratedImageUrl}
+                shouldStartBlankCanvas={shouldStartBlankCanvas} // NEW PROP
+                onBack={() => navigate('/')}
+                onAddToMyDrawings={handleAddToMyDrawings}
+              />
+            }
         />
         <Route
           path="/mydrawings"
@@ -98,6 +157,17 @@ const App = () => {
               <MyDrawings
                 onSelectDrawing={handleSelectDrawingForPractice}
                 onBack={() => navigate('/')}
+                onGoToArtPost={handleGoToArtPost}
+              />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/artpost"
+          element={
+            <PrivateRoute>
+              <ArtPost
+                goBackHome={() => navigate('/')}
               />
             </PrivateRoute>
           }
