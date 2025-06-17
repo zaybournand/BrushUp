@@ -15,6 +15,7 @@ dist/
 .env.production.local
 
 
+Miniforge3-MacOSX-arm64.sh
 
 art-ai-trainer/backend/*.prem
 
