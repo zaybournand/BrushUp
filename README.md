@@ -15,7 +15,7 @@ KEY FEATURES:
 TECHNOLOGIES:
 Frontend: React, React Router DOM, JavaScript
 Backend: Flask, SQLAlchemy, Python
-AI/ML: PyTorch, Hugging Face (Diffusers, Accelerate)
+AI/ML: PyTorch, Hugging Face (Diffusers, Accelerate), Stable Diffusion
 Database: SQLite (local development)
 Tools: npm, conda/pip, mkcert (for local HTTPS)
 
@@ -57,7 +57,7 @@ USAGE:
 2. For full features (AI generation, saving, community posts), create an account and log in.
 3. Access the backend directly at https://localhost:5001 (you might need to manually trust the certificate if prompted).
 
-NOTE: AI image generation runs on CPU in local development, expect it to take a few moments per image.
+NOTE: AI image generation runs on Apple Silicon's GPU (MPS) using Accelerate, typically taking moments per image.
 
 CONTACT:
 zaybournand@gmail.com
