@@ -66,11 +66,6 @@ const referenceTips = {
     "Understand your light source before you begin.",
     "Use a blending stump or tissue for smooth shading."
   ],
-  Eyes: [
-    "Always draw the eyelid and eye socket—not just the iris.",
-    "Add reflections for realism, but don’t overdo it.",
-    "Use reference photos to study subtle anatomy differences."
-  ],
   Structure: [
     "Break objects down into basic shapes like cubes and cylinders.",
     "Use perspective lines to keep proportions accurate.",
@@ -360,13 +355,25 @@ const Reference = ({ goBackHome }) => {
             </div>
           )}
 
+          <div className="modal-actions">
+            <button onClick={() => {
+                setShowGenerator(false); // Close the modal
+                setGeneratorMessage(''); // Clear any message
+                setPrompt(''); // Clear prompt
+                setNegativePrompt(''); // Clear negative prompt
+                setGeneratedImageUrl(''); // Clear generated image
+            }} className="cancel-btn" disabled={isGenerating}>
+                Cancel
+            </button>
+          </div>
+
           {generatedImageUrl && (
             <div className="generated-image-display">
               <h3>Your AI Generated Reference:</h3>
               <img src={generatedImageUrl} alt="AI Generated Reference" className="generated-preview-image" />
               <div className="download-buttons">
                 <a
-                  href={`<span class="math-inline">\{API\_BASE\_URL\}/download/uploads/</span>{generatedImageUrl.split('/').pop()}`} // Ensure correct download URL for AI images
+                  href={`${API_BASE_URL}/download/uploads/${generatedImageUrl.split('/').pop()}`} // Ensure correct download URL for AI images
                   download={`BrushUp-AI-Reference.png`}
                   className="download-button"
                 >
@@ -387,4 +394,4 @@ const Reference = ({ goBackHome }) => {
   );
 };
 
-export default Reference; 
+export default Reference;

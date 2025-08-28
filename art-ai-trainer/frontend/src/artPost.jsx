@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './artPost.css';
 
-const API_BASE_URL = 'https://localhost:5001'; // Ensure this matches your Flask backend's address
+const API_BASE_URL = 'https://localhost:5001'; 
 
 const ArtPost = ({ goBackHome }) => {
   const [communityPosts, setCommunityPosts] = useState([]);
@@ -51,9 +51,7 @@ const ArtPost = ({ goBackHome }) => {
   }, []);
 
   // Fetch all community posts
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fetchCommunityPosts = useCallback(() => { // ESLint warning ignored here as sortBy is a valid dependency
-    // Note: Search filtering is done client-side for now
+  const fetchCommunityPosts = useCallback(() => { // 
     fetch(`${API_BASE_URL}/api/get_community_posts?sort_by=${sortBy}`, { credentials: 'include' })
       .then(handleFetchResponse)
       .then(data => setCommunityPosts(data))
@@ -61,7 +59,7 @@ const ArtPost = ({ goBackHome }) => {
         console.error("Error fetching community posts:", err);
         setMessage(`Failed to load community posts: ${err.message}`);
       });
-  }, [sortBy]); // sortBy is a necessary dependency here
+  }, [sortBy]); 
 
 
   // Fetch user's drawings
@@ -240,7 +238,7 @@ const ArtPost = ({ goBackHome }) => {
       .then(handleFetchResponse)
       .then(data => {
         fetchCommunityPosts();
-        setMessage('Comment added!');
+       
       })
       .catch(err => {
         console.error("Error commenting on post:", err);

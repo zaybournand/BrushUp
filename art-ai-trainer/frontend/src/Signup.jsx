@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [username, setUsername] = useState(''); // New state for username
+    const [username, setUsername] = useState(''); 
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const registerUser = () => {
-        if (!email || !password || !username) { // Added username to validation
+        if (!email || !password || !username) { 
             setError("Email, password, and username are required.");
             return;
         }
@@ -22,9 +22,9 @@ export default function RegisterPage() {
         })
         .then(response => {
             console.log(response);
-            // Removed redundant localStorage.setItem calls
+            
             // After successful registration, navigate to login page
-            navigate("/login"); // Changed from "/" to "/login"
+            navigate("/login"); 
         })
         .catch(error => {
             console.error(error);

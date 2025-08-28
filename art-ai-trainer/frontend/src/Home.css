@@ -271,7 +271,7 @@
   margin-bottom: 25px;
 }
 
-/* Generator Inputs (reused from Reference.css - ensure these are here or linked) */
+/* Generator Inputs */
 .generator-inputs {
   display: flex;
   flex-direction: column;
@@ -335,7 +335,7 @@
   background-color: #d0d0d0;
 }
 
-/* Messages (reused from Reference.css) */
+/* Messages */
 .generator-message {
   padding: 10px 15px;
   border-radius: 8px;
@@ -350,7 +350,7 @@
   border: 1px solid #ef5350;
 }
 
-/* Loading spinner (reused from Reference.css) */
+/* Loading spinner */
 .loading-spinner-container {
   display: flex;
   flex-direction: column;
@@ -373,11 +373,11 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-/* Home.css additions */
+
 
 /* AI Image Preview Modal specific styles */
 .preview-modal-content {
-  max-width: 650px; /* Make preview modal a bit wider */
+  max-width: 650px; 
   padding: 25px;
 }
 
@@ -448,17 +448,14 @@
   border: none;
   border-radius: 8px;
   /* Make padding slightly smaller */
-  padding: 6px 12px; /* Adjusted padding */
+  padding: 6px 12px; 
   /* Make font slightly smaller */
-  font-size: 0.8em; /* Adjusted font size */
+  font-size: 0.8em; 
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  /* Make width slightly smaller */
-  min-width: 80px; /* Adjusted minimum width */
+  min-width: 80px; 
   text-align: center;
-  /* REMOVE THIS LINE IF IT WAS THERE - it's redundant/unusual padding */
-  /* padding-bottom: 10px; */
 }
 
 .arrow-button:hover:not(:disabled) {

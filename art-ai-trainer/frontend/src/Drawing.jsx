@@ -70,11 +70,9 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
   const [imageIndex, setImageIndex] = useState(initialImageIndex || 0);
 
   // Initialize isCanvasBlankMode from prop, but allow local state changes
-  // MODIFIED: Use shouldStartBlankCanvas to initialize
   const [isCanvasBlankMode, setIsCanvasBlankMode] = useState(shouldStartBlankCanvas);
 
   // Determine the reference image URL based on priority:
-  // Blank Mode > AI generated > Existing Drawing > Skill-based
   const referenceImage = isCanvasBlankMode // If in blank mode, always return empty
     ? ''
     : aiGeneratedImageURL
@@ -131,7 +129,7 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
         ctx.font = '20px Arial';
         ctx.textAlign = 'center';
         ctx.fillStyle = 'red';
-        ctx.fillText('Image failed to load. Check console.', canvas.width / 2, canvas.height / 2); // Shorter error message
+        ctx.fillText('Image failed to load. Check console.', canvas.width / 2, canvas.height / 2); 
       };
     } 
 
@@ -231,7 +229,6 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
       setImageIndex(0); // Reset index for new skill
     } else {
       // If user selects "-- Select --" or empty, optionally revert to blank mode
-      // MODIFIED: If no skill is selected, go into blank mode.
       setIsCanvasBlankMode(true); // Default to blank if skill is empty
       setSkill('');
       setImageIndex(0);
@@ -248,10 +245,10 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
 
 
   const addToMyDrawings = () => {
-    console.log("Add button clicked: Attempting to save drawing."); // ADD THIS LINE
+    console.log("Add button clicked: Attempting to save drawing."); 
     const canvas = canvasRef.current;
     if (!canvas) {
-      console.log("Canvas reference not found."); // ADD THIS LINE
+      console.log("Canvas reference not found."); 
       return;
     }
     const drawingData = {
@@ -259,10 +256,10 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
       image_url: canvas.toDataURL('image/png'),
     };
     if (onAddToMyDrawings) {
-      console.log("Calling onAddToMyDrawings prop..."); // ADD THIS LINE
+      console.log("Calling onAddToMyDrawings prop..."); 
       onAddToMyDrawings(drawingData);
     } else {
-      console.log("onAddToMyDrawings prop is not defined."); // ADD THIS LINE
+      console.log("onAddToMyDrawings prop is not defined.");
     }
   };
 
@@ -277,7 +274,7 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
           <select
             value={skill}
             onChange={handleSkillChange}
-            // MODIFIED: Disable only if an existing drawing or AI image is loaded
+
             // Blank mode itself doesn't disable skill selection, as you can switch out of it.
             disabled={!!selectedExistingDrawing || !!aiGeneratedImageURL}
           >
@@ -336,7 +333,7 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
 
         <button onClick={clearCanvas}>🧹 Clear</button>
 
-        {/* NEW: Blank Canvas Button in Toolbar (only show if not already in blank mode AND no other image source is selected) */}
+        {/* NEW: Blank Canvas Button in Toolbar (only show if not already in blank mode and no other image source is selected) */}
         {!isCanvasBlankMode && !selectedExistingDrawing && !aiGeneratedImageURL && (
           <button onClick={switchToBlankCanvas} className="blank-canvas-drawing-btn">
             ⬜ Blank Canvas

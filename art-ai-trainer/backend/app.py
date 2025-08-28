@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -10,19 +10,17 @@ import os
 from sqlalchemy import desc, func
 from diffusers import StableDiffusionPipeline
 import torch
-from flask import send_from_directory 
 
 print("\n--- Initializing Stable Diffusion model for image generation API ---")
 print("This may take a while, especially on the first run (downloading model weights)...")
 
-# Choose your model. "runwayml/stable-diffusion-v1-5" is a good balance for 8GB RAM.
 model_id_for_api = "runwayml/stable-diffusion-v1-5"
 
-# Device setup for the Flask app's ML component
+# Determine the appropriate device for model execution (MPS for Apple Silicon, else CPU)
 device_for_api = "mps" if torch.backends.mps.is_available() else "cpu"
+# Set the torch data type based on the device for optimal performance
 torch_dtype_for_api = torch.float16 if device_for_api == "mps" else torch.float32
 
-# Global variable to hold the loaded pipeline
 global_diffusion_pipeline = None
 
 try:
@@ -30,21 +28,18 @@ try:
         model_id_for_api,
         torch_dtype=torch_dtype_for_api
     )
-    # Move the model to the determined device
     global_diffusion_pipeline = global_diffusion_pipeline.to(device_for_api)
     print(f"Stable Diffusion model '{model_id_for_api}' loaded successfully on {device_for_api} for API.")
     print("--- Model initialization complete ---")
 except Exception as e:
+    # Handle exceptions during model loading, disable image generation API if it fails
     print(f"\n--- ERROR: FAILED TO LOAD STABLE DIFFUSION MODEL FOR API ---")
     print(f"Reason: {e}")
     print("Image generation API will be disabled due to this failure.")
-    global_diffusion_pipeline = None # Ensure it's None if loading fails
+    global_diffusion_pipeline = None
     print("--- Model initialization failed ---")
 
-# --- END GLOBAL MACHINE LEARNING MODEL INITIALIZATION ---
-
-
-app = Flask(__name__) # This line is now correctly placed after the ML model initialization
+app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'a_very_secret_and_complex_key_that_is_not_just_your_secret_key_for_real_use'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -53,36 +48,37 @@ UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
+# Configure session cookies for security
 app.config["SESSION_COOKIE_SAMESITE"] = "None"
 app.config["SESSION_COOKIE_SECURE"] = True
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
-CORS(app, supports_credentials=True, origins=["http://localhost:3000", "https://localhost:3000", "https://localhost:5001"]) # ADDED https://localhost:5001
-
+CORS(app, supports_credentials=True, origins=["http://localhost:3000", "https://localhost:3000", "https://localhost:5001"])
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
+# Handler for unauthorized access, returns a JSON error
 @login_manager.unauthorized_handler
 def unauthorized():
     return jsonify({"error": "Unauthorized"}), 401
 
+# --- Database Models ---
 
 class User(db.Model, UserMixin):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    username = db.Column(db.String(80), unique=True, nullable=True) # Ensure this field is present
+    username = db.Column(db.String(80), unique=True, nullable=True)
     drawings = db.relationship('Drawing', backref='owner', lazy=True)
     community_posts = db.relationship('CommunityPost', backref='poster', lazy=True)
     likes = db.relationship('Like', backref='liker', lazy=True)
@@ -101,7 +97,6 @@ class Drawing(db.Model):
     name = db.Column(db.String(150), nullable=False)
     image_url = db.Column(db.String(300), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User')
 
     def to_dict(self):
         return {
@@ -119,6 +114,7 @@ class CommunityPost(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    # Deletes associated likes and comments when a post is deleted
     likes = db.relationship('Like', backref='post', lazy='dynamic', cascade="all, delete-orphan")
     comments = db.relationship('Comment', backref='post', lazy='dynamic', cascade="all, delete-orphan")
 
@@ -144,6 +140,7 @@ class Like(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('community_post.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    # Ensures a user can only like a post once
     __table_args__ = (db.UniqueConstraint('user_id', 'post_id', name='_user_post_uc'),)
 
     def to_dict(self):
@@ -172,6 +169,7 @@ class Comment(db.Model):
             "created_at": self.created_at.isoformat() + 'Z'
         }
 
+# --- Flask-Login User Loader ---
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -181,6 +179,7 @@ def load_user(user_id):
     except (ValueError, TypeError):
         return None
 
+# --- User Authentication Routes ---
 
 @app.route("/signup", methods=["POST"])
 def signup():
@@ -206,7 +205,6 @@ def signup():
     login_user(new_user)
     return jsonify({"id": new_user.id, "email": new_user.email, "username": new_user.username}), 201
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -224,6 +222,7 @@ def login():
         login_user(user)
         return jsonify({"id": user.id, "email": user.email, "username": user.username}), 200
     else:
+        # Inform user to use POST method for login
         return jsonify({"message": "Please POST credentials to log in."}), 200
 
 @app.route("/whoami", methods=["GET"])
@@ -249,13 +248,13 @@ def logout():
     session.clear()
     return jsonify({"message": "Successfully logged out"}), 200
 
+# --- Drawing Management Routes ---
 
 @app.route('/user-drawings', methods=['GET'])
 @login_required
 def get_user_drawings():
     user_drawings = Drawing.query.filter_by(user_id=current_user.id).all()
     return jsonify([drawing.to_dict() for drawing in user_drawings]), 200
-
 
 @app.route("/upload-drawing", methods=["POST"])
 @login_required
@@ -273,13 +272,11 @@ def upload_drawing():
 
     return jsonify(drawing.to_dict()), 201
 
-
 @app.route("/my-drawings", methods=["GET"])
 @login_required
 def my_drawings():
     drawings = Drawing.query.filter_by(user_id=current_user.id).all()
     return jsonify([d.to_dict() for d in drawings]), 200
-
 
 @app.route("/rename-drawing", methods=["POST"])
 @login_required
@@ -299,7 +296,6 @@ def rename_drawing():
     db.session.commit()
     return jsonify(drawing.to_dict()), 200
 
-
 @app.route("/delete-drawing/<int:id>", methods=["DELETE"])
 @login_required
 def delete_drawing(id):
@@ -310,6 +306,8 @@ def delete_drawing(id):
     db.session.delete(drawing)
     db.session.commit()
     return jsonify({"message": "Drawing deleted"}), 200
+
+# --- File Upload Route ---
 
 @app.route('/api/upload_file', methods=['POST'])
 @login_required
@@ -327,6 +325,8 @@ def upload_file():
         public_url = f"https://localhost:5001/{app.config['UPLOAD_FOLDER']}/{filename}"
         return jsonify({"public_url": public_url}), 200
     return jsonify({"error": "File type not allowed"}), 400
+
+# --- Community Post Routes ---
 
 @app.route("/api/create_post", methods=["POST"])
 @login_required
@@ -349,47 +349,42 @@ def create_community_post():
     return jsonify(new_post.to_dict(include_likes_count=True, include_comments=True)), 201
 
 @app.route("/api/generate_reference_image", methods=["POST"])
-@login_required # Only logged-in users can use the generation feature
+@login_required
 def generate_reference_image():
-    global global_diffusion_pipeline # Add this line
+    global global_diffusion_pipeline
 
-    # Check if the model was loaded successfully on app startup
     if global_diffusion_pipeline is None:
         return jsonify({"error": "Image generation service is unavailable (model failed to load)."}), 503
 
     data = request.json
     prompt = data.get("prompt")
-    negative_prompt = data.get("negative_prompt", "").strip() # Optional negative prompt
+    negative_prompt = data.get("negative_prompt", "").strip()
 
     if not prompt or not prompt.strip():
         return jsonify({"error": "Prompt cannot be empty for image generation."}), 400
 
-    # Ensure the static/uploads folder exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     try:
         print(f"API Request: Generating image for prompt: '{prompt}'...")
-        # Use torch.no_grad() for inference to save memory and speed up computation.
-        # Adjust num_inference_steps (higher = better quality, slower) and guidance_scale.
+
         with torch.no_grad():
             generated_images = global_diffusion_pipeline(
                 prompt=prompt,
                 negative_prompt=negative_prompt if negative_prompt else None,
-                num_inference_steps=30, # Balance quality and speed (try 20-50)
-                guidance_scale=7.5      # Standard value, influences adherence to prompt
+                num_inference_steps=30,
+                guidance_scale=7.5
             ).images
 
         if not generated_images:
             return jsonify({"error": "Image generation failed: No image output from model."}), 500
 
-        # Save the first generated image
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = secure_filename(f"generated_ref_{timestamp}.png")
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         generated_images[0].save(file_path)
 
-        # Construct the public URL for the generated image
-        public_url = f"https://localhost:5001/{app.config['UPLOAD_FOLDER']}/{filename}" # Use your Flask port (5001)
+        public_url = f"https://localhost:5001/{app.config['UPLOAD_FOLDER']}/{filename}"
 
         print(f"Image generated and saved: {public_url}")
         return jsonify({"image_url": public_url}), 200
@@ -403,12 +398,12 @@ def generate_reference_image():
 
 @app.route("/api/get_community_posts", methods=["GET"])
 def get_community_posts():
-    sort_by = request.args.get("sort_by", "newest") # Default to 'newest'
+    sort_by = request.args.get("sort_by", "newest")
 
     if sort_by == "newest":
         posts = CommunityPost.query.order_by(desc(CommunityPost.created_at)).all()
     elif sort_by == "most_liked":
-        # Join with Like table and count likes, then order by the count
+        # Join with Like table, group by post, count likes, and order by count descending
         posts = db.session.query(CommunityPost).outerjoin(Like).group_by(CommunityPost.id).order_by(desc(func.count(Like.id))).all()
     else:
         return jsonify({"error": "Invalid sort_by parameter. Use 'newest' or 'most_liked'."}), 400
@@ -417,7 +412,6 @@ def get_community_posts():
         post.to_dict(include_likes_count=True, include_comments=True)
         for post in posts
     ]), 200
-
 
 @app.route("/api/like_post/<int:post_id>", methods=["POST"])
 @login_required
@@ -431,17 +425,14 @@ def like_post(post_id):
     if existing_like:
         db.session.delete(existing_like)
         db.session.commit()
-        # Fetch the updated post to get the correct like count
         post = CommunityPost.query.get(post_id)
         return jsonify({"message": "Post unliked", "likes_count": post.likes.count()}), 200
     else:
         new_like = Like(user_id=current_user.id, post_id=post_id)
         db.session.add(new_like)
         db.session.commit()
-        # Fetch the updated post to get the correct like count
         post = CommunityPost.query.get(post_id)
         return jsonify({"message": "Post liked", "likes_count": post.likes.count()}), 200
-
 
 @app.route("/api/comment_post/<int:post_id>", methods=["POST"])
 @login_required
@@ -468,7 +459,6 @@ def comment_post(post_id):
 
 @app.route('/download/uploads/<filename>', methods=['GET'])
 def download_uploaded_file(filename):
-
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 @app.route("/api/delete_post/<int:post_id>", methods=["DELETE"])
@@ -479,6 +469,7 @@ def delete_community_post(post_id):
     if not post:
         return jsonify({"error": "Post not found"}), 404
 
+    # Check if the current user is the author of the post
     if post.user_id != current_user.id:
         return jsonify({"error": "Unauthorized to delete this post"}), 403
 
@@ -486,7 +477,7 @@ def delete_community_post(post_id):
     db.session.commit()
     return jsonify({"message": "Post deleted successfully"}), 200
 
-
+# Create all database tables within the application context if they don't already exist
 with app.app_context():
     db.create_all()
 
@@ -495,10 +486,10 @@ if __name__ == "__main__":
     ssl_key_path = 'localhost+2-key.pem'
 
     try:
-        app.run(debug=True, host="localhost", port=5001, ssl_context=(ssl_cert_path, ssl_key_path)) # CHANGED PORT TO 5001
+        app.run(debug=True, host="localhost", port=5001, ssl_context=(ssl_cert_path, ssl_key_path))
     except FileNotFoundError:
         print("SSL certificate files not found, running without SSL.")
-        app.run(debug=True, host="localhost", port=5001) # CHANGED PORT TO 5001
+        app.run(debug=True, host="localhost", port=5001)
     except Exception as e:
         print(f"Error starting app with SSL: {e}. Running without SSL.")
-        app.run(debug=True, host="localhost", port=5001) # CHANGED PORT TO 5001
+        app.run(debug=True, host="localhost", port=5001)

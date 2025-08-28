@@ -1,7 +1,6 @@
 .drawing-container {
   text-align: center;
   padding: 30px;
-  /* REMOVED: font-size: 2.5rem; This was making everything inside gigantic */
   background: linear-gradient(to bottom, #fdfcfb, #e2d1c3);
   background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
   width: 100%;
@@ -14,7 +13,7 @@ h2 {
   font-family: 'Brush Script MT', cursive;
   margin-bottom: 20px;
   color: #1e1e1e;
-  font-size: 2.5rem; /* Added specific font-size for h2 if desired */
+  font-size: 2.5rem; 
 }
 
 .toolbar {
@@ -70,7 +69,7 @@ h2 {
 
 .back-button {
   padding: 10px 18px;
-  font-size: 1rem; /* This will now correctly be 1rem of the root font size */
+  font-size: 1rem; 
   background-color: #ef4444;
   color: white;
   border: none;

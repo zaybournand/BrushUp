@@ -35,7 +35,7 @@ export const UserProvider = ({ children }) => {
         checkUser();
     }, []); // Empty dependency array means this runs once on component mount
 
-    // Function to update user state upon login
+   
     // It now expects the full user data object as an argument
     const login = (userData) => {
         setCurrentUser(userData);

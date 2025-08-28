@@ -34,12 +34,12 @@ export default function LoginPage() {
 
             console.log("Login successful:", response.data);
 
-            // IMPORTANT: Pass the entire user data object, which now includes id, email, and username
+            //  Pass the entire user data object, which includes id, email, and username
             if (response.data && response.data.id) {
                 login({ // Pass an object with id, email, and username
                     id: response.data.id,
                     email: response.data.email,
-                    username: response.data.username // Include username
+                    username: response.data.username 
                 });
                 setMessage('Login successful!');
                 navigate("/");

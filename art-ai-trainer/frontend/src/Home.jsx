@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import { useUser } from './UserContext';
@@ -20,7 +20,7 @@ const Home = ({ onStartDrawing, onGoToMyDrawings, onGoToReference, onGoToArtPost
   const [aiGeneratedImageUrl, setAiGeneratedImageUrl] = useState(null);
 
   const [showAIPreviewModal, setShowAIPreviewModal] = useState(false);
-
+  
 
   // Image map with arrays of images (BlankCanvas removed as it's now a button)
   const imageMap = {
