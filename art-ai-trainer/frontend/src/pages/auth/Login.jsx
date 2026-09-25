@@ -1,9 +1,10 @@
+import { API_BASE_URL } from '../../services/api.js';
 
 
 import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { useUser } from './UserContext';
+import { useUser } from '../../contexts/UserContext.js';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ export default function LoginPage() {
 
         try {
             const response = await axios.post(
-                'https://localhost:5001/login',
+                `${API_BASE_URL}/login`,
                 { email, password },
                 { withCredentials: true }
             );
@@ -39,14 +40,14 @@ export default function LoginPage() {
                 login({ // Pass an object with id, email, and username
                     id: response.data.id,
                     email: response.data.email,
-                    username: response.data.username 
+                    username: response.data.username
                 });
                 setMessage('Login successful!');
                 navigate("/");
             } else {
                 console.warn("Login response did not contain expected user data. Attempting /whoami fallback.");
                 const sessionCheck = await axios.get(
-                    'https://localhost:5001/whoami',
+                    `${API_BASE_URL}/whoami`,
                     { withCredentials: true }
                 );
                 console.log("Session after login fallback:", sessionCheck.data);

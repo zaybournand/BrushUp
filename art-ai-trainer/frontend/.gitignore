@@ -36,6 +36,9 @@ generated_images/
 
 # Local and Temporary Files
 *.pem
+
+*.key
+*.crt
 Miniforge3-MacOSX-arm64.sh # NEW: Ignore the large installer script
 *.sh # NEW: To catch any other shell scripts
 *.log
@@ -48,3 +51,4 @@ Miniforge3-MacOSX-arm64.sh # NEW: Ignore the large installer script
 
 # --- Testing ---
 coverage/
+

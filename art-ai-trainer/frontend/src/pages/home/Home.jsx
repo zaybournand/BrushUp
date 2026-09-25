@@ -1,9 +1,8 @@
+import { API_BASE_URL } from '../../services/api.js';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
-import { useUser } from './UserContext';
-
-const API_BASE_URL = 'https://localhost:5001';
+import { useUser } from '../../contexts/UserContext.js';
 
 const Home = ({ onStartDrawing, onGoToMyDrawings, onGoToReference, onGoToArtPost, onAICreateDrawing, onStartBlankDrawing }) => { // ADDED onStartBlankDrawing prop
   const [skill, setSkill] = useState('');
@@ -20,7 +19,7 @@ const Home = ({ onStartDrawing, onGoToMyDrawings, onGoToReference, onGoToArtPost
   const [aiGeneratedImageUrl, setAiGeneratedImageUrl] = useState(null);
 
   const [showAIPreviewModal, setShowAIPreviewModal] = useState(false);
-  
+
 
   // Image map with arrays of images (BlankCanvas removed as it's now a button)
   const imageMap = {
@@ -182,7 +181,7 @@ const Home = ({ onStartDrawing, onGoToMyDrawings, onGoToReference, onGoToArtPost
           )}
         </div>
       </div>
-          
+
       <h1 className="home-title">BrushUp</h1>
       <p className="instruction-text">
         Select a skill to practice and view a reference image or create your own image with AI. Then click "Start Drawing" to begin!
@@ -307,7 +306,7 @@ const Home = ({ onStartDrawing, onGoToMyDrawings, onGoToReference, onGoToArtPost
           <div className="modal-content">
             <h2>Generate AI Image for Drawing</h2>
             <p className="modal-description">Enter a prompt to create your custom reference image.</p>
-            
+
             <div className="generator-inputs">
               <textarea
                 placeholder="Enter your prompt (e.g., 'A manga character with a determined expression, side view')"
@@ -341,7 +340,7 @@ const Home = ({ onStartDrawing, onGoToMyDrawings, onGoToReference, onGoToArtPost
                 Cancel
               </button>
             </div>
-            
+
             {isGeneratingAI && (
                 <div className="loading-spinner-container">
                     <div className="loading-spinner"></div>
@@ -358,7 +357,7 @@ const Home = ({ onStartDrawing, onGoToMyDrawings, onGoToReference, onGoToArtPost
           <div className="modal-content preview-modal-content">
             <h2>AI Generated Image Preview</h2>
             <p className="modal-description">Review your generated image before starting to draw.</p>
-            
+
             <div className="preview-image-container">
               <img src={aiGeneratedImageUrl} alt="Generated AI Reference" className="preview-image" />
             </div>

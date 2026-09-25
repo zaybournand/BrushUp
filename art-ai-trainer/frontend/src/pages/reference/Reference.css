@@ -13,20 +13,20 @@
     text-align: center;
     position: relative;
   }
-  
+
   .reference-title {
     font-size: 4rem;
     font-family: 'Brush Script MT', cursive;
     color: #1e1e1e;
     margin-bottom: 10px;
   }
-  
+
   .reference-subtitle {
     font-size: 1.2rem;
     color: #333;
     margin-bottom: 30px;
   }
-  
+
   .reference-toolbar {
     display: flex;
     align-items: center;
@@ -35,7 +35,7 @@
     font-size: 1.1rem;
     flex-wrap: wrap;
   }
-  
+
   .reference-toolbar select {
     padding: 12px 20px;
     font-size: 1rem;
@@ -43,7 +43,7 @@
     border: 1px solid #999;
     font-family: Arial, sans-serif;
   }
-  
+
   .reference-toolbar button {
     padding: 12px 20px;
     font-size: 0.95rem;
@@ -56,12 +56,12 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s;
   }
-  
+
   .reference-toolbar button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
-  
+
   .reference-preview {
     width: 360px;
     height: auto;
@@ -71,14 +71,14 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     margin-bottom: 15px;
   }
-  
+
   .download-buttons {
     display: flex;
     gap: 15px;
     justify-content: center;
     margin-bottom: 30px;
   }
-  
+
   .download-button {
     padding: 8px 16px;
     font-size: 0.95rem;
@@ -92,7 +92,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s;
   }
-  
+
   .reference-tips {
     max-width: 600px;
     background: white;
@@ -101,13 +101,13 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     text-align: left;
   }
-  
+
   .reference-tips h2 {
     font-size: 1.6rem;
     margin-bottom: 10px;
     color: #1e1e1e;
   }
-  
+
   .reference-tips ul {
     padding-left: 20px;
   }
@@ -117,13 +117,13 @@
     color: #444;
     line-height: 1.5;
   }
-  
+
   .back-button-container {
     position: absolute;
     top: 20px;
     left: 20px;
   }
-  
+
   .back-button {
     padding: 6px 12px;
     font-size: 0.9rem;
@@ -136,7 +136,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.2s;
   }
-  
+
   .back-button:hover {
     background-color: #ef4444;
   }
@@ -144,19 +144,19 @@
     background-color: #068cf9;
     color: white;
   }
-  
+
   .download-button:nth-child(1):hover {
     background-color: #077ad9;
   }
-  
+
 
   .download-button:nth-child(2) {
-    background-color: #f97316; 
+    background-color: #f97316;
     color: white;
   }
-  
+
   .download-button:nth-child(2):hover {
-    background-color: #ea580c; 
+    background-color: #ea580c;
   }
   /* General styling for the new section */
 .ai-generator-section {

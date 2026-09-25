@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../services/api.js';
 import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
@@ -5,26 +6,26 @@ import { useNavigate } from "react-router-dom";
 export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [username, setUsername] = useState(''); 
+    const [username, setUsername] = useState('');
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const registerUser = () => {
-        if (!email || !password || !username) { 
+        if (!email || !password || !username) {
             setError("Email, password, and username are required.");
             return;
         }
 
-        axios.post('https://localhost:5001/signup', {
+        axios.post(`${API_BASE_URL}/signup`, {
             email: email,
             password: password,
-            username: username // Send username to the backend
+            username: username
         })
         .then(response => {
             console.log(response);
-            
+
             // After successful registration, navigate to login page
-            navigate("/login"); 
+            navigate("/login");
         })
         .catch(error => {
             console.error(error);

@@ -1,19 +1,18 @@
+import { API_BASE_URL } from '../services/api.js';
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import Home from './Home';
-import Drawing from './Drawing';
-import MyDrawings from './myDrawings';
-import Reference from './Reference';
-import ArtPost from './artPost';
-import Login from './Log in';
-import RegisterPage from './Signup';
+import Home from '../pages/home/Home.jsx';
+import Drawing from '../pages/drawing/Drawing.jsx';
+import MyDrawings from '../pages/drawings/MyDrawings.jsx';
+import Reference from '../pages/reference/Reference.jsx';
+import ArtPost from '../pages/community/ArtPost.jsx';
+import Login from '../pages/auth/Login.jsx';
+import RegisterPage from '../pages/auth/Signup.jsx';
 
-import { UserProvider } from './UserContext';
-import PrivateRoute from './PrivateRoute';
-
-const API_BASE_URL = 'https://localhost:5001';
+import { UserProvider } from '../contexts/UserContext.js';
+import PrivateRoute from '../components/PrivateRoute.js';
 
 const App = () => {
   // State to manage the drawing skill level
@@ -26,7 +25,7 @@ const App = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   // State to determine if the drawing canvas should be blank
-  const [shouldStartBlankCanvas, setShouldStartBlankCanvas] = useState(false); 
+  const [shouldStartBlankCanvas, setShouldStartBlankCanvas] = useState(false);
 
   const navigate = useNavigate();
 
@@ -36,7 +35,7 @@ const App = () => {
     setSelectedImageIndex(imageIndex);
     setSelectedExistingDrawing(null);
     setAiGeneratedImageUrl(null);
-    setShouldStartBlankCanvas(false); 
+    setShouldStartBlankCanvas(false);
     navigate('/drawing');
   };
 
@@ -46,17 +45,17 @@ const App = () => {
     setSelectedSkill('');
     setSelectedExistingDrawing(null);
     setSelectedImageIndex(0);
-    setShouldStartBlankCanvas(false); 
+    setShouldStartBlankCanvas(false);
     navigate('/drawing');
   };
 
   // Function to start a drawing on a blank canvas
   const handleStartBlankDrawing = () => {
-    setShouldStartBlankCanvas(true); 
+    setShouldStartBlankCanvas(true);
     setSelectedSkill('');
-    setSelectedExistingDrawing(null); 
+    setSelectedExistingDrawing(null);
     setAiGeneratedImageUrl(null);
-    setSelectedImageIndex(0); 
+    setSelectedImageIndex(0);
     navigate('/drawing');
   };
 
@@ -66,7 +65,7 @@ const App = () => {
     setAiGeneratedImageUrl(null);
     setSelectedSkill('');
     setSelectedImageIndex(0);
-    setShouldStartBlankCanvas(false); 
+    setShouldStartBlankCanvas(false);
     navigate('/mydrawings');
   };
 
@@ -96,13 +95,13 @@ const App = () => {
     setSelectedSkill('');
     setAiGeneratedImageUrl(null);
     setSelectedImageIndex(0);
-    setShouldStartBlankCanvas(false); 
+    setShouldStartBlankCanvas(false);
     navigate('/drawing');
   };
 
   // Function to save a drawing to the user's account via API
   const handleAddToMyDrawings = async (drawingData) => {
-    console.log("handleAddToMyDrawings called with data:", drawingData.name); 
+    console.log("handleAddToMyDrawings called with data:", drawingData.name);
     try {
       const response = await axios.post(
         `${API_BASE_URL}/upload-drawing`,
@@ -118,7 +117,7 @@ const App = () => {
       navigate('/mydrawings');
     } catch (error) {
       console.error('Failed to add drawing to MyDrawings:', error);
-      alert(`Failed to save drawing: ${error.message}. Please ensure you are logged in.`); 
+      alert(`Failed to save drawing: ${error.message}. Please ensure you are logged in.`);
       if (error.response && error.response.status === 401) {
         navigate('/login');
       }
@@ -138,7 +137,7 @@ const App = () => {
               onGoToMyDrawings={handleGoToMyDrawings}
               onGoToReference={handleGoToReference}
               onGoToArtPost={handleGoToArtPost}
-              onStartBlankDrawing={handleStartBlankDrawing} 
+              onStartBlankDrawing={handleStartBlankDrawing}
             />
           }
         />
@@ -151,7 +150,7 @@ const App = () => {
                 initialImageIndex={selectedImageIndex}
                 selectedExistingDrawing={selectedExistingDrawing}
                 aiGeneratedImageURL={aiGeneratedImageUrl}
-                shouldStartBlankCanvas={shouldStartBlankCanvas} 
+                shouldStartBlankCanvas={shouldStartBlankCanvas}
                 onBack={() => navigate('/')}
                 onAddToMyDrawings={handleAddToMyDrawings}
               />

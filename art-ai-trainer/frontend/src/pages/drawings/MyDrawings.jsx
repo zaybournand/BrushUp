@@ -1,10 +1,9 @@
+import { API_BASE_URL } from '../../services/api.js';
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './myDrawings.css';
-import { useUser } from './UserContext'; 
-
-const API_BASE_URL = 'https://localhost:5001';
+import './MyDrawings.css';
+import { useUser } from '../../contexts/UserContext.js';
 
 const MyDrawings = ({ onSelectDrawing, onBack }) => {
   const [drawings, setDrawings] = useState([]);
@@ -13,7 +12,7 @@ const MyDrawings = ({ onSelectDrawing, onBack }) => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [editedName, setEditedName] = useState('');
 
-  const { currentUser } = useUser(); 
+  const { currentUser } = useUser();
   const navigate = useNavigate();
 
   const fetchDrawings = useCallback(async () => {
@@ -61,7 +60,7 @@ const MyDrawings = ({ onSelectDrawing, onBack }) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
 
-    setLoading(true); 
+    setLoading(true);
 
     for (const file of files) {
       const reader = new FileReader();

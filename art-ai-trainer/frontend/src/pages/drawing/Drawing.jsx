@@ -129,9 +129,9 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
         ctx.font = '20px Arial';
         ctx.textAlign = 'center';
         ctx.fillStyle = 'red';
-        ctx.fillText('Image failed to load. Check console.', canvas.width / 2, canvas.height / 2); 
+        ctx.fillText('Image failed to load. Check console.', canvas.width / 2, canvas.height / 2);
       };
-    } 
+    }
 
     ctx.lineCap = 'round';
   }, [referenceImage]);
@@ -171,7 +171,7 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    
+
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Always clear first
 
     if (referenceImage && !isCanvasBlankMode) { // Only redraw reference if not in blank mode
@@ -245,10 +245,10 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
 
 
   const addToMyDrawings = () => {
-    console.log("Add button clicked: Attempting to save drawing."); 
+    console.log("Add button clicked: Attempting to save drawing.");
     const canvas = canvasRef.current;
     if (!canvas) {
-      console.log("Canvas reference not found."); 
+      console.log("Canvas reference not found.");
       return;
     }
     const drawingData = {
@@ -256,7 +256,7 @@ const Drawing = ({ skill: initialSkill, onBack, aiGeneratedImageURL, selectedExi
       image_url: canvas.toDataURL('image/png'),
     };
     if (onAddToMyDrawings) {
-      console.log("Calling onAddToMyDrawings prop..."); 
+      console.log("Calling onAddToMyDrawings prop...");
       onAddToMyDrawings(drawingData);
     } else {
       console.log("onAddToMyDrawings prop is not defined.");

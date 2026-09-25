@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../services/api.js';
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 
@@ -14,7 +15,7 @@ export const UserProvider = ({ children }) => {
         const checkUser = async () => {
             try {
                 // Call your whoami endpoint to check session status
-                const response = await axios.get('https://localhost:5001/whoami', { withCredentials: true });
+                const response = await axios.get(`${API_BASE_URL}/whoami`, { withCredentials: true });
                 if (response.data && response.data.user_id) {
                     // Store the entire user data object from the backend response
                     setCurrentUser({
@@ -35,7 +36,7 @@ export const UserProvider = ({ children }) => {
         checkUser();
     }, []); // Empty dependency array means this runs once on component mount
 
-   
+
     // It now expects the full user data object as an argument
     const login = (userData) => {
         setCurrentUser(userData);
@@ -44,7 +45,7 @@ export const UserProvider = ({ children }) => {
     // Function to handle logout
     const logout = async () => {
         try {
-            await axios.post('https://localhost:5001/logout', {}, { withCredentials: true });
+            await axios.post(`${API_BASE_URL}/logout`, {}, { withCredentials: true });
             setCurrentUser(null); // Clear user data on logout
         } catch (error) {
             console.error("Logout failed:", error);
@@ -63,7 +64,7 @@ export const UserProvider = ({ children }) => {
 // Custom hook to easily consume the UserContext
 export const useUser = () => {
     const context = useContext(UserContext);
-    if (context === undefined) {
+    if (context === null) {
         throw new Error('useUser must be used within a UserProvider');
     }
     return context;

@@ -1,5 +1,30 @@
-backend/localhost+2-key.pem
-backend/localhost+2.pem
-backend/__pycache__/
+# Local configuration and certificates
+.env
+.env.*
+!.env.example
+*.pem
+
+# Python environments and caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+diffusion_env/
+.pytest_cache/
+
+# Runtime data
 backend/instance/
 backend/generated_images/
+backend/static/uploads/*
+!backend/static/uploads/.gitkeep
+
+# Frontend output
+node_modules/
+build/
+coverage/
+
+# Operating system files
+.DS_Store
+
+# Previous local dependency installation
+.node_modules-backup/

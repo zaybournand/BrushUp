@@ -1,7 +1,6 @@
+import { API_BASE_URL } from '../../services/api.js';
 import React, { useState, useEffect } from 'react';
 import './Reference.css';
-
-const API_BASE_URL = 'https://localhost:5001'; // Ensure this matches your Flask backend's address
 
 const referenceImages = {
   Shading: [
@@ -86,7 +85,7 @@ const referenceTips = {
     "Balance positive and negative space to avoid clutter.",
     "Guide the viewer’s eye using visual flow—lines, shapes, or lighting."
   ],
-  
+
 };
 
 const Reference = ({ goBackHome }) => {
@@ -264,7 +263,7 @@ const Reference = ({ goBackHome }) => {
             <option value="Perspective">Perspective</option>
             <option value="Composition">Composition</option>
         </select>
-        
+
         <button onClick={handleNewImage} disabled={!selectedSkill}>
           New
         </button>
@@ -316,7 +315,7 @@ const Reference = ({ goBackHome }) => {
           {showGenerator ? 'Hide' : 'Show'}
         </button>
       </h2>
-      
+
       {showGenerator && (
         <div className="ai-generator-section">
           <p className="generator-description">Describe an image you'd like to use as a reference. The AI will generate it for you!</p>
@@ -357,7 +356,7 @@ const Reference = ({ goBackHome }) => {
 
           <div className="modal-actions">
             <button onClick={() => {
-                setShowGenerator(false); // Close the modal
+                setShowGenerator(false);
                 setGeneratorMessage(''); // Clear any message
                 setPrompt(''); // Clear prompt
                 setNegativePrompt(''); // Clear negative prompt
